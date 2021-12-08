@@ -118,18 +118,21 @@ As a result of the pattern of characteristics, there are a lot of constraints as
 %Get this on overleaf
 %Get riley and Laren's stuff  on here 
 
+<<<<<<< HEAD
 	\subsection{Introduction of Diffusion Term}
+=======
+\subsection{Introduction of Diffusion Term}
+>>>>>>> 5795823c750843b396ddd771cfad4571e6871511
 The introduction of the diffusion term then helps us work around some of the problems the characteristics run into. In addition, we were able to use boundary conditions that had discontinuities. If we had these with only an advection term, these discontinuities would simply be carried through the solution. However, with diffusion, these jumps tend to smooth out over time.
 
 \subsection{Finite Difference Scheme}
 We create a finite difference scheme of the equation by taking a forward time difference and a centered approximation of the spatial derivative. This gives us
 \begin{align*}
-    u(x,t+\Delta t)=u(x,t)&+\Delta t[f(u(x,t))] \\
-    =u(x,t)&+V_{\infty}\Delta t\left[\epsilon u_{xx}-u_x\left(1-\frac{2u(x,t)}{u_{\infty}}\right)\right] \\
-    =u(x,t)&+\left[\frac{V_{\infty}\Delta t\epsilon}{(\Delta x)^2}(u(x+\Delta x, t)-2u(x,t)+u(x-\Delta x,t))\right] \\
-    &-\left[\frac{V_{\infty}\Delta t}{2\Delta x}\left(1-\frac{2u(x,t)}{u_{\infty}}\right)(u(x+\Delta x,t)-u(x-\Delta x,t)\right] \\
+u(x,t+\Delta t)=u(x,t)&+\Delta t[f(u(x,t))] \\
+=u(x,t)&+V_{\infty}\Delta t\left[\epsilon u_{xx}-u_x\left(1-\frac{2u(x,t)}{u_{\infty}}\right)\right] \\
+=u(x,t)&+\left[\frac{V_{\infty}\Delta t\epsilon}{(\Delta x)^2}(u(x+\Delta x, t)-2u(x,t)+u(x-\Delta x,t))\right] \\
+&-\left[\frac{V_{\infty}\Delta t}{2\Delta x}\left(1-\frac{2u(x,t)}{u_{\infty}}\right)(u(x+\Delta x,t)-u(x-\Delta x,t)\right] \\
 \end{align*}
-
 %% Third Section
 \section{Results of PDE Approach}
 
