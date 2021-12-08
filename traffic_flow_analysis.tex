@@ -25,7 +25,7 @@
 \maketitle
 
 \begin{abstract}
-Place Abstract Here.
+Model the flow of traffic at a stoplight. 
 \end{abstract}
 
 %% First Section
@@ -33,7 +33,7 @@ Place Abstract Here.
 Put your background motivation stuff here. You might reference something material here like \cite{ref1}.
 
 %% Second Section 
-\section{Modeling PDE for Traffic Flow}
+\section{Modeling Traffic Flow – PDE Approach}
 
 To begin our first foray into modelling traffic flow, we will pull from Volume 4 and work with the given equation for traffic flow $u_t + V_\infty \left(1 - \frac{2u}{u_{\infty}} \right) u_x = 0$. We want to consider three cases:
 \begin{enumerate}
@@ -70,63 +70,186 @@ Next, suppose that there are some values $x_0, x_1$ from which we draw character
 \begin{figure}[!htb]
     \captionsetup{justification=centering}
     \minipage{0.32\textwidth}
-    \includegraphics[width=\linewidth]{shock_x1_x2_lt_half.png}
+    \includegraphics[width=\linewidth]{figures/shock_x1_x2_lt_half.png}
     \caption{$u(x_0) < u(x_1), u(x_0), u(x_1) \in (0, \frac{u_\infty}{2})$}\label{fig:shock_x1_x2_lt_half}
     \endminipage\hfill
     \minipage{0.32\textwidth}
-    \includegraphics[width=\linewidth]{shock_x1_x2_gt_half.png}
+    \includegraphics[width=\linewidth]{figures/shock_x1_x2_gt_half.png}
     \caption{$u(x_0) < u(x_1), u(x_0), u(x_1) \in (\frac{u_\infty}{2}, u_\infty)$}\label{fig:shock_x1_x2_gt_half}
     \endminipage\hfill
     \minipage{0.32\textwidth}%
-    \includegraphics[width=\linewidth]{shock_x1_eq_half.png}
+    \includegraphics[width=\linewidth]{figures/shock_x1_eq_half.png}
     \caption{$u(x_0) < u(x_1), u(x_0) \in (\frac{u_\infty}{2}, u_\infty), u(x_1) = \frac{u_\infty}{2} $}\label{fig:shock_x1_eq_half}
     \endminipage
 \end{figure}
 
-Conversely, if the density of the initial condition is decreasing (i.e. when $x_0 < x_1 \implies u(x_0) < u(x_1)$), there are no shocks. See Figure 
+Conversely, if the density of the initial condition is decreasing (i.e. when $x_0 < x_1 \implies u(x_0) < u(x_1)$), there are no shocks. See Figures  \ref{fig:no_shock_x1_x2_lt_half}, \ref{fig:no_shock_x1_x2_gt_half}, and \ref{fig:no_shock_x0_eq_half} for examples. 
 
 \begin{figure}[!htb]
     \captionsetup{justification=centering}
     \minipage{0.32\textwidth}
-    \includegraphics[width=\linewidth]{no_shock_x1_x2_lt_half.png}
+    \includegraphics[width=\linewidth]{figures/no_shock_x1_x2_lt_half.png}
     \caption{$u(x_0) > u(x_1), u(x_0), u(x_1) \in (0, \frac{u_\infty}{2})$}\label{fig:no_shock_x1_x2_lt_half}
     \endminipage\hfill
     \minipage{0.32\textwidth}
-    \includegraphics[width=\linewidth]{no_shock_x1_x2_gt_half.png}
+    \includegraphics[width=\linewidth]{figures/no_shock_x1_x2_gt_half.png}
     \caption{$u(x_0) > u(x_1), u(x_0), u(x_1) \in (\frac{u_\infty}{2}, u_\infty)$}\label{fig:no_shock_x1_x2_gt_half}
     \endminipage\hfill
     \minipage{0.32\textwidth}%
-    \includegraphics[width=\linewidth]{no_shock_x0_eq_half.png}
+    \includegraphics[width=\linewidth]{figures/no_shock_x0_eq_half.png}
     \caption{$u(x_0) < u(x_1), u(x_0) = \frac{u_\infty}{2},  u(x_0) \in (\frac{u_\infty}{2}, u_\infty) $}\label{fig:no_shock_x0_eq_half}
     \endminipage
 \end{figure}
 
-Write up numerical scheme with boundary conditions
-Try to figure out why sheme is unstable
-Apply to scenarios
-Note instability
-Try extending domain horizontally with an unrealistic rhs boundary condition OR have the cars come to red light (neumann)
-Figure out code for neumann b.c.
+%Write up numerical scheme with boundary conditions
+%Try to figure out why sheme is unstable
+%Apply to scenarios
+%Note instability
+%Try extending domain horizontally with an unrealistic rhs boundary condition OR have the cars come to red light (neumann)
+%Figure out code for neumann b.c.
+%
+%try case 2 (will need to knock out diffusion term)
+%
+%combine simulations for case 3, TEEEHEHEEEEEEEEEEh
+%
+%Get this on overleaf
+%Get riley and Laren's stuff  on here 
 
-try case 2 (will need to knock out diffusion term)
+\subsection{Introduction of Diffusion Term}
 
-combine simulations for case 3, TEEEHEHEEEEEEEEEEh
-
-Get this on overleaf
-Get riley and Laren's stuff  on here 
-
-\begin{verbatim}
-This stuff looks like code
-            Tabs show up!
-\end{verbatim}
-
+\subsection{Finite Difference Scheme}
 
 %% Third Section
-\section{Results/Analysis}
+\section{Results of PDE Approach}
 
-\section{Modeling using SIR Model Type ODEs}
+\section{Modeling Traffic Flow – SIR Approach}
 
-\section{Results/Analysis}
+\subsection{Governing Equations} 
+We will use the equations 
+\begin{align*}
+    u_t + L(x, t) ( 1 - \frac{2n}{u_\infty} ) u_x = 0 
+\end{align*}
+
+and analyze this equation considering several cases and initial conditions. We have gotten this equation from the discussion on traffic in 8.1 of Volume 4, but have replaced the term $V_\infty$ with $L(x, t)$ where $L(x, t)$ will be defined as to simulate different stop light patterns. Other variables in this equation include $u_\infty$ which refers to the maximum density of cars at a given position. 
+
+We expect to define the light equation $L$ as $L : \mathcal{R} \times \mathcal{R} \to [0, V_\infty]$. In situations where we are modeling cars getting going from stop as the light turn green, $L(x, t) = V_\infty$ and will be constant. In the situation where we model a red light turning on to stop oncoming traffic, we will examine different functions for $L(x, t)$ to see what kind of definition produces a realistic simulation of traffic flow. 
+
+\subsection{Solutions}
+
+We will attempt to solve these equations analytically, but will likely end up using numerical methods, especially as we get into weirder initial conditions (such as cars stopping at a red light). 
+
+If we are successful at modeling cars starting and stopping at a light, we will attempt to model an intersection with cars coming and leaving in two perpendicular directions.
+
+% %% First Section
+% \section{Background/Motivation}
+% Put your background motivation stuff here. You might reference something material here like \cite{ref1}.
+
+% %% Second Section 
+% \section{Modeling}
+\subsection{SIR Details}
+To better approximate a more complicated system with multiple interacting streams, we employed an SIR styled model. 
+
+Structure
+While there are many different traffic light intersections and variants, this model assumes a standard 4 way intersection with traffic coming from each of the cardinal directions (north, east, south, and west). Each direction has 3 streams of traffic, a turning left stream, a straight stream, and a right stream. 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=11cm]{figures/TrafficDiagrampng.png}
+    %  \caption{Traffic Flow Diagram}
+    \label{fig:diagram}
+\end{figure}
+
+The change in the straight stream is only dependent on whether the light is red or green. The left stream is “unprotected”, meaning that the change in the left stream depends on whether the light is green and how much traffic is coming from the opposite straight stream. The right stream is free to turn at any time, and is only dependent on how much traffic is coming from the perpendicular straight stream.
+
+\subsubsection{Implementation}
+
+First, we define a light function. We want this function to be periodic and to move between 0 (red) and 1 (green). Rather than having one function that returns red for one direction and green for the other direction, we created two correlated functions that define the state of the light in the north-south direction and the east-west direction:
+
+\[
+\textrm{lightNS(t)} =
+\begin{cases} 
+    \sin(3t) & \frac{t}{ 2\pi} \mod 2 \pi\in [0, \frac{\pi}{6}) \\
+    1 & \frac{t}{ 2\pi} \mod 2 \pi\in [\frac{\pi}{6},\frac{5\pi}{6}) \\
+    \sin(3t) & \frac{t}{ 2\pi} \mod 2 \pi\in [\frac{5\pi}{6}, \pi) \\
+    0 & \text{otherwise}
+\end{cases}
+\]
+
+
+
+
+\begin{align*}
+    \textrm{lightEW(t)} =
+    \begin{cases} 
+        -\sin(3t) & \frac{t}{2\pi} \mod 2 \pi \in [\pi,\frac{7\pi}{6} ) \\ 
+        1 & \frac{t}{ 2\pi }\mod 2 \pi \in [\frac{7\pi}{6},11\frac{5\pi}{6} ) \\
+        -\sin(3t) & \frac{t}{ 2\pi} \mod 2 \pi\in  [\frac{11\pi}{6}, 2 \pi) \\
+        0 & \text{otherwise}
+    \end{cases}
+\end{align*}
+
+Next, we define 12 different “bins”, one for each stream of our model (eg. North Forward), and then define the derivative of each bin:\\\\
+
+\begin{flalign*}
+    N_F'(t) = -1*\text{LightNS}(t)\\
+    E_F'(t) = -1*\text{LightEW}(t)\\
+    S_F'(t) = -1*\text{LightNS}(t)\\
+    W_F'(t) = -1*\text{LightEW}(t)\\\\
+    N_L'(t) = -1*\text{LightNS}(t)*(1+S_F'(t))\\
+    E_L'(t) = -1*\text{LightEW}(t)*(1+W_F'(t))\\
+    S_L'(t) = -1*\text{LightNS}(t)*(1+N_F'(t))\\
+    W_L'(t) = -1*\text{LightEW}(t)*(1+E_F'(t))\\\\
+    N_R'(t) = -1*W_F'(t)\\
+    E_R'(t) = -1*S_F'(t)\\
+    S_R'(t) = -1*E_F'(t)\\
+    W_R'(t) = -1*N_F'(t)\\
+\end{flalign*}
+
+
+
+The definitions above assume constant base changes between all streams, that no new cars are entering the system, and that left turns have zero change whenever the cars coming straight are coming at full capacity. To account for these, we add some constants that allow for configuring the system:\\\\
+\begin{flalign*}
+    N_F'(t) = -1*c_f*\text{LightNS}(t)+add_f\\
+    E_F'(t) = -1*c_f*\text{LightEW}(t)+add_f\\
+    S_F'(t) = -1*c_f*\text{LightNS}(t)+add_f\\
+    W_F'(t) = -1*c_f*\text{LightEW}(t)+add_f\\\\
+    N_L'(t) = -1*c_l*\text{LightNS}(t)*((left\_turn\_gap\_c*c_f) + S_F'(t)) + add_l\\
+    E_L'(t) = -1*c_l*\text{LightEW}(t)*((left\_turn\_gap\_c*c_f) + W_F'(t)) + add_l\\
+    S_L'(t) = -1*c_l*\text{LightNS}(t*((left\_turn\_gap\_c*c_f) + N_F'(t)) + add_l\\
+    W_L'(t) = -1*c_l*\text{LightEW}(t)*((left\_turn\_gap\_c*c_f) + E_F'(t)) + add_l\\\\
+    N_R'(t) = -1*c_r*W_F'(t)+add_r\\
+    E_R'(t) = -1*c_r*S_F'(t)+add_r\\
+    S_R'(t) = -1*c_r*E_F'(t)+add_r\\
+    W_R'(t) = -1*c_r*N_F'(t)+add_r\\
+\end{flalign*}
+
+\section{Results of SIR Approach}
+Solutions to this system were calculated numerically with scipy.integrate.solve\_ivp.\\
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=12cm]{figures/NorthandEastForwardStreams.png}
+    \label{fig:NorthandEastForwardStreams}
+\end{figure}
+
+Below we see the North and East forward streams, with the north-south light function shown with the alternating green and red zones. This model aligns with our expectations, with the number of cars waiting to go straight decreasing from the north when the light is green while the east stream accumulates more cars.\\
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=12cm]{figures/NorthStreams.png}
+    \label{fig:NorthStreams}
+\end{figure}
+
+Further below, we see the three different north streams. We see that while the light is green the forward and right streams change identically, however, the right stream continues to decrease during the transition from green to red. This again lines up with what we would expect from the rules of the system, as the right turn can continue to turn right up until cars start to flow forward from the east.\\
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=12cm]{figures/NorthLeftwithSouthForward.png}
+    \label{fig:NorthLeftwithSouthForward}
+\end{figure}
+
+Next we examine how a left turn interacts with the forward blocking stream. We see that the left turn has the sharpest decrease right before the light turns red. This is an interesting attribute of the model that lines up with how left turns behave in day to day life. Often, people waiting to turn left will creep into the intersection, then turn left as the light turns red and the oncoming traffic stops.\\
 
 %%Fourth Section
 \section{Conclusions}

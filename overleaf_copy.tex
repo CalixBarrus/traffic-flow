@@ -58,79 +58,82 @@ While there are many different traffic light intersections and variants, this mo
 
 \begin{figure}[htp]
     \centering
-    \includegraphics[width=11cm]{TrafficDiagrampng.png}
+    \includegraphics[width=11cm]{figures/TrafficDiagrampng.png}
   %  \caption{Traffic Flow Diagram}
     \label{fig:diagram}
 \end{figure}
 
 The change in the straight stream is only dependent on whether the light is red or green. The left stream is “unprotected”, meaning that the change in the left stream depends on whether the light is green and how much traffic is coming from the opposite straight stream. The right stream is free to turn at any time, and is only dependent on how much traffic is coming from the perpendicular straight stream.
-\\\\
+
 \subsection{Implementation}
-\\\\
+
 First, we define a light function. We want this function to be periodic and to move between 0 (red) and 1 (green). Rather than having one function that returns red for one direction and green for the other direction, we created two correlated functions that define the state of the light in the north-south direction and the east-west direction:
 
-\begin{center}
+\[
 \textrm{lightNS(t)} =
 \begin{cases} 
-      $sin(3t)$ & $t \% 2\pi < \frac{\pi}{6})$ \\
-      1 & $t \% 2\pi \in [\frac{\pi}{6},\frac{5\pi}{6})$ \\
-      $sin(3t)$ & $t \% 2\pi \in [\frac{5\pi}{6},\frac{\pi})$ \\
-      $0 otherwise$
+      \sin(3t) & \frac{t}{ 2\pi} \mod 2 \pi\in [0, \frac{\pi}{6}) \\
+      1 & \frac{t}{ 2\pi} \mod 2 \pi\in [\frac{\pi}{6},\frac{5\pi}{6}) \\
+      \sin(3t) & \frac{t}{ 2\pi} \mod 2 \pi\in [\frac{5\pi}{6}, \pi) \\
+      0 & \text{otherwise}
    \end{cases}
-\end{center}
+\]
 
 
 
-\begin{center}
-\textrm{lightEW(t)} =
+
+\begin{align*}
+    \textrm{lightEW(t)} =
 \begin{cases} 
-      $-sin(3t)$ & $t \% 2\pi > \frac{11\pi}{6})$ \\
-      1 & $t \% 2\pi \in (7\frac{\pi}{6},11\frac{5\pi}{6}]$ \\
-      $-sin(3t)$ & $t \% 2\pi \in (\pi,7\frac{\pi})$ \\
-      $0 otherwise$
+      -\sin(3t) & \frac{t}{2\pi} \mod 2 \pi \in [\pi,\frac{7\pi}{6} ) \\ 
+      1 & \frac{t}{ 2\pi }\mod 2 \pi \in [\frac{7\pi}{6},11\frac{5\pi}{6} ) \\
+      -\sin(3t) & \frac{t}{ 2\pi} \mod 2 \pi\in  [\frac{11\pi}{6}, 2 \pi) \\
+      0 & \text{otherwise}
    \end{cases}
-\end{center}
+\end{align*}
 
 Next, we define 12 different “bins”, one for each stream of our model (eg. North Forward), and then define the derivative of each bin:\\\\
-\begin{left}
-    $N_F'(t) = -1*\text{LightNS}(t)$\\
-    $E_F'(t) = -1*\text{LightEW}(t)$\\
-    $S_F'(t) = -1*\text{LightNS}(t)$\\
-    $W_F'(t) = -1*\text{LightEW}(t)$\\\\
-    $N_L'(t) = -1*\text{LightNS}(t)*(1+S_F'(t))$\\
-    $E_L'(t) = -1*\text{LightEW}(t)*(1+W_F'(t))$\\
-    $S_L'(t) = -1*\text{LightNS}(t)*(1+N_F'(t))$\\
-    $W_L'(t) = -1*\text{LightEW}(t)*(1+E_F'(t))$\\\\
-    $N_R'(t) = -1*W_F'(t)$\\
-    $E_R'(t) = -1*S_F'(t)$\\
-    $S_R'(t) = -1*E_F'(t)$\\
-    $W_R'(t) = -1*N_F'(t)$\\
 
-\end{left}
+    \begin{flalign*}
+    N_F'(t) = -1*\text{LightNS}(t)\\
+    E_F'(t) = -1*\text{LightEW}(t)\\
+    S_F'(t) = -1*\text{LightNS}(t)\\
+    W_F'(t) = -1*\text{LightEW}(t)\\\\
+    N_L'(t) = -1*\text{LightNS}(t)*(1+S_F'(t))\\
+    E_L'(t) = -1*\text{LightEW}(t)*(1+W_F'(t))\\
+    S_L'(t) = -1*\text{LightNS}(t)*(1+N_F'(t))\\
+    W_L'(t) = -1*\text{LightEW}(t)*(1+E_F'(t))\\\\
+    N_R'(t) = -1*W_F'(t)\\
+    E_R'(t) = -1*S_F'(t)\\
+    S_R'(t) = -1*E_F'(t)\\
+    W_R'(t) = -1*N_F'(t)\\
+\end{flalign*}
+
+
 
 The definitions above assume constant base changes between all streams, that no new cars are entering the system, and that left turns have zero change whenever the cars coming straight are coming at full capacity. To account for these, we add some constants that allow for configuring the system:\\\\
-\begin{left}
-    $N_F'(t) = -1*c_f*\text{LightNS}(t)+add_f$\\
-    $E_F'(t) = -1*c_f*\text{LightEW}(t)+add_f$\\
-    $S_F'(t) = -1*c_f*\text{LightNS}(t)+add_f$\\
-    $W_F'(t) = -1*c_f*\text{LightEW}(t)+add_f$\\\\
-    $N_L'(t) = -1*c_l*\text{LightNS}(t)*((left\_turn\_gap\_c*c_f) + S_F'(t)) + add_l$\\
-    $E_L'(t) = -1*c_l*\text{LightEW}(t)*((left\_turn\_gap\_c*c_f) + W_F'(t)) + add_l$\\
-    $S_L'(t) = -1*c_l*\text{LightNS}(t*((left\_turn\_gap\_c*c_f) + N_F'(t)) + add_l$\\
-    $W_L'(t) = -1*c_l*\text{LightEW}(t)*((left\_turn\_gap\_c*c_f) + E_F'(t)) + add_l$\\\\
-    $N_R'(t) = -1*c_r*W_F'(t)+add_r$\\
-    $E_R'(t) = -1*c_r*S_F'(t)+add_r$\\
-    $S_R'(t) = -1*c_r*E_F'(t)+add_r$\\
-    $W_R'(t) = -1*c_r*N_F'(t)+add_r$\\
-\end{left}
+\begin{flalign*}
+    N_F'(t) = -1*c_f*\text{LightNS}(t)+add_f\\
+    E_F'(t) = -1*c_f*\text{LightEW}(t)+add_f\\
+    S_F'(t) = -1*c_f*\text{LightNS}(t)+add_f\\
+    W_F'(t) = -1*c_f*\text{LightEW}(t)+add_f\\\\
+    N_L'(t) = -1*c_l*\text{LightNS}(t)*((left\_turn\_gap\_c*c_f) + S_F'(t)) + add_l\\
+    E_L'(t) = -1*c_l*\text{LightEW}(t)*((left\_turn\_gap\_c*c_f) + W_F'(t)) + add_l\\
+    S_L'(t) = -1*c_l*\text{LightNS}(t*((left\_turn\_gap\_c*c_f) + N_F'(t)) + add_l\\
+    W_L'(t) = -1*c_l*\text{LightEW}(t)*((left\_turn\_gap\_c*c_f) + E_F'(t)) + add_l\\\\
+    N_R'(t) = -1*c_r*W_F'(t)+add_r\\
+    E_R'(t) = -1*c_r*S_F'(t)+add_r\\
+    S_R'(t) = -1*c_r*E_F'(t)+add_r\\
+    W_R'(t) = -1*c_r*N_F'(t)+add_r\\
+\end{flalign*}
 
-\subsection{Results}\\\\
+\subsection{Results}
 Solutions to this system were calculated numerically with scipy.integrate.solve\_ivp.\\
 
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=12cm]{NorthandEastForwardStreams.png}
+    \includegraphics[width=12cm]{figures/NorthandEastForwardStreams.png}
     \label{fig:diagram}
 \end{figure}
 
@@ -138,7 +141,7 @@ Below we see the North and East forward streams, with the north-south light func
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=12cm]{NorthStreams.png}
+    \includegraphics[width=12cm]{figures/NorthStreams.png}
     \label{fig:diagram}
 \end{figure}
 
@@ -146,7 +149,7 @@ Further below, we see the three different north streams. We see that while the l
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=12cm]{NorthLeftwithSouthForward.png}
+    \includegraphics[width=12cm]{figures/NorthLeftwithSouthForward.png}
     \label{fig:diagram}
 \end{figure}
 
